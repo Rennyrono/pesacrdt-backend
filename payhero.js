@@ -27,7 +27,7 @@ async function initiatePayHeroPayment(phoneNumber) {
     console.log("🚀 Sending PayHero Request:", payload);
 
     const response = await axios.post(
-      "https://api.payhero.co.ke/api/v2/payments",
+      "https://api.payhero.co.ke/api/v2/transaction/mpesa/stk-push",
       payload,
       {
         headers: {
