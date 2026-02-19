@@ -3,7 +3,8 @@ const axios = require("axios");
 async function initiatePayHeroPayment(phoneNumber) {
   try {
     if (
-      !process.env.PAYHERO_BASIC_TOKEN ||
+      !process.env.PAYHERO_USERNAME ||
+      !process.env.PAYHERO_PASSWORD ||
       !process.env.PAYHERO_ACCOUNT_ID ||
       !process.env.PAYHERO_CHANNEL_ID ||
       !process.env.APPLICATION_FEE ||
@@ -11,6 +12,11 @@ async function initiatePayHeroPayment(phoneNumber) {
     ) {
       throw new Error("Missing required PayHero environment variables");
     }
+
+    // 🔐 Generate Basic Auth token properly
+    const authToken = Buffer.from(
+      `${process.env.PAYHERO_USERNAME}:${process.env.PAYHERO_PASSWORD}`
+    ).toString("base64");
 
     const payload = {
       amount: Number(process.env.APPLICATION_FEE),
@@ -30,7 +36,7 @@ async function initiatePayHeroPayment(phoneNumber) {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ${process.env.PAYHERO_BASIC_TOKEN}`,
+          Authorization: `Basic ${authToken}`,
         },
         timeout: 15000,
       }
@@ -44,7 +50,10 @@ async function initiatePayHeroPayment(phoneNumber) {
     };
 
   } catch (error) {
-    console.error("❌ PayHero Error:", error.response?.data || error.message);
+    console.error(
+      "❌ PayHero Error:",
+      error.response?.data || error.message
+    );
 
     return {
       success: false,
