@@ -2,7 +2,6 @@ const axios = require("axios");
 
 async function initiatePayHeroPayment(phoneNumber) {
   try {
-    // Validate required environment variables
     if (
       !process.env.PAYHERO_BASIC_TOKEN ||
       !process.env.PAYHERO_ACCOUNT_ID ||
@@ -27,7 +26,7 @@ async function initiatePayHeroPayment(phoneNumber) {
     console.log("🚀 Sending PayHero Request:", payload);
 
     const response = await axios.post(
-      "https://api.payhero.co.ke/api/v2/transaction/mpesa/stk-push",
+      "https://api.payhero.africa/api/v2/transaction/mpesa/stk-push",
       payload,
       {
         headers: {
@@ -44,6 +43,7 @@ async function initiatePayHeroPayment(phoneNumber) {
       success: true,
       data: response.data,
     };
+
   } catch (error) {
     console.error(
       "❌ PayHero Error:",

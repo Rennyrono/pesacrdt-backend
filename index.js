@@ -29,7 +29,7 @@ app.post("/api/payhero/stk", async (req, res) => {
   if (!phoneNumber) {
     return res.status(400).json({
       success: false,
-      error: "Phone number is required",
+      error: { message: "Phone number is required" },
     });
   }
 
@@ -39,7 +39,12 @@ app.post("/api/payhero/stk", async (req, res) => {
     const result = await initiatePayHeroPayment(phoneNumber);
 
     if (!result.success) {
-      return res.status(500).json(result);
+      console.error("❌ Payment Failed:", result.error);
+
+      return res.status(400).json({
+        success: false,
+        error: result.error,
+      });
     }
 
     return res.json({
@@ -47,12 +52,13 @@ app.post("/api/payhero/stk", async (req, res) => {
       message: "Payment prompt sent to phone",
       data: result.data,
     });
+
   } catch (error) {
     console.error("❌ Server Error:", error.message);
 
     return res.status(500).json({
       success: false,
-      error: "Internal server error",
+      error: { message: "Internal server error" },
     });
   }
 });
@@ -64,11 +70,6 @@ app.post("/api/payhero/callback", (req, res) => {
   console.log("🔔 PAYHERO CALLBACK RECEIVED:");
   console.log(JSON.stringify(req.body, null, 2));
 
-  // TODO:
-  // - Mark user as paid
-  // - Store transaction in database
-  // - Unlock loan eligibility
-
   res.json({ received: true });
 });
 
@@ -76,6 +77,6 @@ app.post("/api/payhero/callback", (req, res) => {
 // START SERVER
 // ===============================
 app.listen(PORT, () => {
-  console.log("🔥 RUNNING Server/index.js 🔥");
+  console.log("🔥 Backend Running 🔥");
   console.log(`Server running on port ${PORT}`);
 });
