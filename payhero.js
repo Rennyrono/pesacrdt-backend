@@ -3,7 +3,7 @@ const axios = require("axios");
 async function initiatePayHeroPayment(phoneNumber) {
   try {
     if (
-      !process.env.PAYHERO_API_SECRET ||
+      !process.env.PAYHERO_BASIC_TOKEN ||
       !process.env.PAYHERO_ACCOUNT_ID ||
       !process.env.PAYHERO_CHANNEL_ID ||
       !process.env.APPLICATION_FEE ||
@@ -30,7 +30,7 @@ async function initiatePayHeroPayment(phoneNumber) {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.PAYHERO_API_SECRET}`,
+          Authorization: `Basic ${process.env.PAYHERO_BASIC_TOKEN}`,
         },
         timeout: 15000,
       }
