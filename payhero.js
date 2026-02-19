@@ -2,6 +2,7 @@ const axios = require("axios");
 
 async function initiatePayHeroPayment(phoneNumber) {
   try {
+    // ✅ Validate required environment variables
     if (
       !process.env.PAYHERO_BASIC_TOKEN ||
       !process.env.PAYHERO_ACCOUNT_ID ||
@@ -12,11 +13,11 @@ async function initiatePayHeroPayment(phoneNumber) {
       throw new Error("Missing required PayHero environment variables");
     }
 
+    // ✅ Correct payload for PayHero Africa
     const payload = {
       amount: Number(process.env.APPLICATION_FEE),
       phone_number: phoneNumber,
-      provider: "m-pesa",
-      network_code: "63902",
+      payment_method: "mpesa",
       channel_id: Number(process.env.PAYHERO_CHANNEL_ID),
       account_id: Number(process.env.PAYHERO_ACCOUNT_ID),
       external_reference: `PESACRDT-${Date.now()}`,
@@ -25,8 +26,9 @@ async function initiatePayHeroPayment(phoneNumber) {
 
     console.log("🚀 Sending PayHero Request:", payload);
 
+    // ✅ Correct Africa endpoint
     const response = await axios.post(
-      "https://sandbox.payhero.africa/api/v2/transaction/mpesa/stk-push",
+      "https://api.payhero.africa/api/v2/payments",
       payload,
       {
         headers: {
